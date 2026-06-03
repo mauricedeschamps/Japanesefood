@@ -1,0 +1,25 @@
+{
+  "name": "Japan Food 16 - Must Eat in Japan",
+  "short_name": "Food16JP",
+  "description": "16 essential Japanese foods with famous restaurant lists in Tokyo, Osaka, Kyoto, Hiroshima, Fukuoka",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "theme_color": "#1e1e2f",
+  "background_color": "#1e1e2f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon-192.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

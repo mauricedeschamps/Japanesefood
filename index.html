@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Japan Food 16 - 日本の美食16選</title>
+  <meta name="description" content="Discover the 16 must-eat foods in Japan with famous restaurants in Tokyo, Osaka, Kyoto, Hiroshima, Fukuoka.">
+  <meta name="theme-color" content="#1e1e2f" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+  <link rel="apple-touch-icon" href="icons/icon-192.jpg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    body.light {
+      --bg: #f5f5f7;
+      --surface: #ffffff;
+      --text: #1c1c1e;
+      --text-secondary: #3a3a3c;
+      --border: #e5e5ea;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      --header-bg: #f5f5f7cc;
+      --footer-bg: #f5f5f7cc;
+      --btn-bg: #e5e5ea;
+      --btn-hover: #d1d1d6;
+    }
+
+    body, body.dark {
+      --bg: #1e1e2f;
+      --surface: #2c2c3a;
+      --text: #f0f0f4;
+      --text-secondary: #c6c6c8;
+      --border: #3a3a4a;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --header-bg: #1e1e2fcc;
+      --footer-bg: #1e1e2fcc;
+      --btn-bg: #3a3a4a;
+      --btn-hover: #4a4a5a;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+    }
+
+    .app-header {
+      padding: 1rem;
+      background-color: var(--header-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button {
+      background-color: var(--btn-bg);
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+      transform: scale(0.97);
+    }
+
+    .lang-group {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .main-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    /* 横スライド：縦4行 x 横にカードを並べる（1列=4個） */
+    .food-slider {
+      display: grid;
+      grid-template-rows: repeat(4, auto);
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(260px, 280px);
+      gap: 1.25rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 1rem;
+      scrollbar-width: thin;
+    }
+
+    .food-slider::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .food-card {
+      scroll-snap-align: start;
+      background: var(--surface);
+      border-radius: 28px;
+      padding: 1rem;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .food-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .food-emoji {
+      font-size: 4.5rem;
+      margin: 0.5rem 0;
+    }
+
+    .food-name {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+    }
+
+    .food-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    .detail-view {
+      max-width: 1000px;
+      margin: 1rem auto;
+      background: var(--surface);
+      border-radius: 32px;
+      padding: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-emoji {
+      font-size: 4rem;
+    }
+
+    .detail-title {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin: 1.5rem 0 1rem 0;
+      border-left: 4px solid #e67e22;
+      padding-left: 0.75rem;
+    }
+
+    .city-shops {
+      margin-bottom: 1.8rem;
+    }
+
+    .city-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1rem 0 0.5rem;
+      color: #e67e22;
+    }
+
+    .shop-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .shop-list li {
+      margin: 0.5rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed var(--border);
+      padding: 0.5rem 0;
+    }
+
+    .shop-name {
+      font-weight: 500;
+    }
+
+    .shop-link {
+      color: #e67e22;
+      text-decoration: none;
+      font-size: 0.85rem;
+      background: var(--btn-bg);
+      padding: 0.2rem 0.7rem;
+      border-radius: 30px;
+    }
+
+    .shop-link:hover {
+      text-decoration: underline;
+    }
+
+    .back-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      background-color: var(--btn-bg);
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 40px;
+    }
+
+    .app-footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--border);
+      background-color: var(--footer-bg);
+      font-size: 0.9rem;
+    }
+
+    .app-footer a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .app-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 700px) {
+      .food-slider {
+        grid-auto-columns: minmax(220px, 240px);
+      }
+      .detail-view {
+        padding: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body class="dark">
+  <header class="app-header">
+    <div class="header-inner">
+      <h1 id="app-title">🍱 Japan Food 16</h1>
+      <div class="controls">
+        <div class="lang-group" id="lang-buttons"></div>
+        <button id="theme-toggle" aria-label="Toggle dark/light mode">🌓 Dark/Light</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app-main">
+    <div id="home-view" class="main-container">
+      <div class="food-slider" id="food-slider"></div>
+    </div>
+    <div id="detail-view" class="detail-view hidden"></div>
+  </main>
+
+  <footer class="app-footer">
+    <div id="footer-text">Contact us<br>mementomorikatsu@gmail.com</div>
+  </footer>
+
+  <script>
+    // ---------- 言語設定 ----------
+    const languages = { en: 'English', de: 'Deutsch', it: 'Italiano', ru: 'Русский', ja: '日本語' };
+    let currentLang = 'en';
+
+    const translations = {
+      en: {
+        title: '🍱 Japan Food 16',
+        footer: 'Contact us\nmementomorikatsu@gmail.com',
+        themeBtn: '🌓 Dark/Light',
+        backHome: '🏠 Home',
+        backPrev: '◀ Back',
+        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+      },
+      de: {
+        title: '🍱 Japan Food 16',
+        footer: 'Kontakt\nmementomorikatsu@gmail.com',
+        themeBtn: '🌓 Dunkel/Hell',
+        backHome: '🏠 Startseite',
+        backPrev: '◀ Zurück',
+        cities: { tokyo: 'Tokio', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+      },
+      it: {
+        title: '🍱 Giappone Cibo 16',
+        footer: 'Contattaci\nmementomorikatsu@gmail.com',
+        themeBtn: '🌓 Scuro/Chiaro',
+        backHome: '🏠 Home',
+        backPrev: '◀ Indietro',
+        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+      },
+      ru: {
+        title: '🍱 Япония 16 блюд',
+        footer: 'Свяжитесь с нами\nmementomorikatsu@gmail.com',
+        themeBtn: '🌓 Тёмная/Светлая',
+        backHome: '🏠 Главная',
+        backPrev: '◀ Назад',
+        cities: { tokyo: 'Токио', osaka: 'Осака', kyoto: 'Киото', hiroshima: 'Хиросима', fukuoka: 'Фукуока' }
+      },
+      ja: {
+        title: '🍱 日本の美食16選',
+        footer: 'お問い合わせ\nmementomorikatsu@gmail.com',
+        themeBtn: '🌓 ダーク/クリア',
+        backHome: '🏠 ホーム',
+        backPrev: '◀ 戻る',
+        cities: { tokyo: '東京', osaka: '大阪', kyoto: '京都', hiroshima: '広島', fukuoka: '福岡' }
+      }
+    };
+
+    // ---------- 全16のフードデータ ----------
+    const foodData = [
+      { id: 'sushi', emoji: '🍣', keyName: 'sushi', keyDesc: 'sushi_desc' },
+      { id: 'ramen', emoji: '🍜', keyName: 'ramen', keyDesc: 'ramen_desc' },
+      { id: 'tempura', emoji: '🍤', keyName: 'tempura', keyDesc: 'tempura_desc' },
+      { id: 'wagyu', emoji: '🥩', keyName: 'wagyu', keyDesc: 'wagyu_desc' },
+      { id: 'okonomiyaki', emoji: '🥘', keyName: 'okonomiyaki', keyDesc: 'okonomiyaki_desc' },
+      { id: 'yakitori', emoji: '🍢', keyName: 'yakitori', keyDesc: 'yakitori_desc' },
+      { id: 'takoyaki', emoji: '🐙', keyName: 'takoyaki', keyDesc: 'takoyaki_desc' },
+      { id: 'udon', emoji: '🍜', keyName: 'udon', keyDesc: 'udon_desc' },
+      { id: 'soba', emoji: '🍚', keyName: 'soba', keyDesc: 'soba_desc' },
+      { id: 'curry', emoji: '🍛', keyName: 'curry', keyDesc: 'curry_desc' },
+      { id: 'gyoza', emoji: '🥟', keyName: 'gyoza', keyDesc: 'gyoza_desc' },
+      { id: 'unagi', emoji: '🐟', keyName: 'unagi', keyDesc: 'unagi_desc' },
+      // 追加4種
+      { id: 'tonkatsu', emoji: '🐷', keyName: 'tonkatsu', keyDesc: 'tonkatsu_desc' },
+      { id: 'izakaya', emoji: '🍻', keyName: 'izakaya', keyDesc: 'izakaya_desc' },
+      { id: 'gyudon', emoji: '🐂', keyName: 'gyudon', keyDesc: 'gyudon_desc' },
+      { id: 'kaitenzushi', emoji: '🍣⚡', keyName: 'kaitenzushi', keyDesc: 'kaitenzushi_desc' }
+    ];
+
+    // 多言語説明文
+    const descriptions = {
+      en: {
+        sushi_desc: 'Fresh vinegared rice with seafood. The essence of Japanese cuisine.',
+        ramen_desc: 'Noodle soup with rich broth. Regional varieties.',
+        tempura_desc: 'Lightly battered deep-fried seafood & vegetables. Crispy heaven.',
+        wagyu_desc: 'Premium Japanese beef with intense marbling. Melts in your mouth.',
+        okonomiyaki_desc: 'Savory pancake with cabbage, meat/seafood, topped with sauce.',
+        yakitori_desc: 'Grilled chicken skewers over charcoal. Simple yet addictive.',
+        takoyaki_desc: 'Ball-shaped snack with octopus, crispy outside, creamy inside.',
+        udon_desc: 'Thick wheat noodles in hot dashi broth. Chewy and comforting.',
+        soba_desc: 'Buckwheat noodles served hot or cold. Nutty and elegant.',
+        curry_desc: 'Japanese curry roux with vegetables & meat. Thick & mild sweet.',
+        gyoza_desc: 'Pan-fried dumplings with juicy pork and garlic filling.',
+        unagi_desc: 'Grilled eel glazed with sweet soy sauce. Luxurious and tender.',
+        tonkatsu_desc: 'Deep-fried breaded pork cutlet. Crispy outside, juicy inside.',
+        izakaya_desc: 'Japanese-style pub serving small shared dishes and drinks.',
+        gyudon_desc: 'Rice bowl topped with thinly sliced beef and onion simmered in sweet soy broth.',
+        kaitenzushi_desc: 'Conveyor belt sushi. Casual and fun way to enjoy fresh sushi.'
+      },
+      de: {
+        sushi_desc: 'Frischer Reis mit Meeresfrüchten. Essenz der japanischen Küche.',
+        ramen_desc: 'Nudelsuppe mit reichhaltiger Brühe. Viele regionale Stile.',
+        tempura_desc: 'Leicht panierte frittierte Meeresfrüchte & Gemüse. Knusprig.',
+        wagyu_desc: 'Hochwertiges japanisches Rindfleisch mit intensiver Marmorierung.',
+        okonomiyaki_desc: 'Herzhafter Pfannkuchen mit Kohl & Fleisch/Meeresfrüchten.',
+        yakitori_desc: 'Gegrillte Hähnchenspieße über Holzkohle. Einfach süchtig machend.',
+        takoyaki_desc: 'Bällchen mit Oktopus, knusprig außen, cremig innen.',
+        udon_desc: 'Dicke Weizennudeln in heißer Dashi-Brühe.',
+        soba_desc: 'Buchweizennudeln heiß oder kalt. Nussig & elegant.',
+        curry_desc: 'Japanisches Curry mit Gemüse & Fleisch. Mild & süßlich.',
+        gyoza_desc: 'Gebratene Teigtaschen mit saftigem Schweinefleisch & Knoblauch.',
+        unagi_desc: 'Gegrillter Aal mit süßer Sojasoße. Luxuriös und zart.',
+        tonkatsu_desc: 'Panierter Schweinekotelett, frittiert. Knusprig außen, saftig innen.',
+        izakaya_desc: 'Japanische Kneipe mit kleinen Gerichten und Getränken.',
+        gyudon_desc: 'Reisschale mit dünn geschnittenem Rindfleisch und Zwiebeln in süßer Sojasauce.',
+        kaitenzushi_desc: 'Sushi vom Laufband. Lässige Art, frischen Sushi zu genießen.'
+      },
+      it: {
+        sushi_desc: 'Riso all’aceto con pesce. L’essenza della cucina giapponese.',
+        ramen_desc: 'Zuppa di noodle con brodo ricco. Variazioni regionali.',
+        tempura_desc: 'Frutti di mare e verdure pastellate e fritte. Croccanti.',
+        wagyu_desc: 'Manzo giapponese pregiato con marezzatura intensa.',
+        okonomiyaki_desc: 'Frittata salata con cavolo e carne/frutti di mare.',
+        yakitori_desc: 'Spiedini di pollo alla griglia. Semplicemente irresistibili.',
+        takoyaki_desc: 'Polpette di polpo, croccanti fuori e cremose dentro.',
+        udon_desc: 'Spesse tagliatelle di grano in brodo caldo.',
+        soba_desc: 'Tagliatelle di grano saraceno. Sapore di nocciola elegante.',
+        curry_desc: 'Curry giapponese con verdure e carne. Dolce e denso.',
+        gyoza_desc: 'Ravioli saltati in padella con maiale succoso e aglio.',
+        unagi_desc: 'Anguilla grigliata glassata con salsa di soia dolce.',
+        tonkatsu_desc: 'Cotoletta di maiale impanata e fritta. Croccante fuori, succosa dentro.',
+        izakaya_desc: 'Pub giapponese con piccoli piatti condivisi e bevande.',
+        gyudon_desc: 'Ciotola di riso con manzo affettato e cipolla stufati in salsa dolce di soia.',
+        kaitenzushi_desc: 'Sushi su nastro trasportatore. Modo divertente e informale.'
+      },
+      ru: {
+        sushi_desc: 'Свежий рис с морепродуктами. Суть японской кухни.',
+        ramen_desc: 'Лапша в насыщенном бульоне. Региональные стили.',
+        tempura_desc: 'Морепродукты и овощи в легком кляре. Хрустящие.',
+        wagyu_desc: 'Японская говядина с интенсивной мраморностью.',
+        okonomiyaki_desc: 'Пикантный блин с капустой, мясом/морепродуктами.',
+        yakitori_desc: 'Куриные шашлычки на углях. Просто и вкусно.',
+        takoyaki_desc: 'Шарики с осьминогом, хрустящие снаружи, нежные внутри.',
+        udon_desc: 'Толстая пшеничная лапша в горячем бульоне даси.',
+        soba_desc: 'Гречневая лапша горячая или холодная.',
+        curry_desc: 'Японское карри с овощами и мясом. Густое и сладковатое.',
+        gyoza_desc: 'Жареные пельмени с сочной свининой и чесноком.',
+        unagi_desc: 'Угорь на гриле в сладком соевом соусе.',
+        tonkatsu_desc: 'Свиная отбивная в панировке фри. Хрустящая снаружи, сочная внутри.',
+        izakaya_desc: 'Японский паб с небольшими закусками и напитками.',
+        gyudon_desc: 'Миска риса с тонко нарезанной говядиной и луком в сладком соевом соусе.',
+        kaitenzushi_desc: 'Суши с конвейерной ленты. Весело и неформально.'
+      },
+      ja: {
+        sushi_desc: '酢飯と新鮮な海鮮。和食の極み。',
+        ramen_desc: '濃厚なスープの麺料理。醤油、味噌、豚骨が代表的。',
+        tempura_desc: '海老や野菜を軽く揚げた、サクサクの天ぷら。',
+        wagyu_desc: '霜降り和牛。とろける食感。',
+        okonomiyaki_desc: 'キャベツや具材を鉄板で焼くお好み焼き。',
+        yakitori_desc: '炭火で焼いた鶏串。シンプルな美味しさ。',
+        takoyaki_desc: '外カリッと中トロ。たこ焼き。',
+        udon_desc: 'コシの強い太麺とだしのうどん。',
+        soba_desc: 'そばの実の香り高い蕎麦。',
+        curry_desc: 'とろみとコクの日本のカレー。',
+        gyoza_desc: 'パリッと焼いた餃子。ニンニク効いたジューシーな餡。',
+        unagi_desc: 'ふっくら蒲焼きのうなぎ。',
+        tonkatsu_desc: 'サクサク衣のジューシーな豚カツ。かつ丼も絶品。',
+        izakaya_desc: '居酒屋。お酒と小皿料理を楽しむ大人の社交場。',
+        gyudon_desc: '甘辛く煮た牛肉と玉ねぎをのせた牛丼。',
+        kaitenzushi_desc: '回転寿司。リーズナブルに新鮮な寿司を楽しめる。'
+      }
+    };
+
+    // 各言語の料理名マップ
+    const foodNames = {
+      en: { sushi:'Sushi', ramen:'Ramen', tempura:'Tempura', wagyu:'Wagyu', okonomiyaki:'Okonomiyaki', yakitori:'Yakitori', takoyaki:'Takoyaki', udon:'Udon', soba:'Soba', curry:'Curry Rice', gyoza:'Gyoza', unagi:'Unagi', tonkatsu:'Tonkatsu', izakaya:'Izakaya', gyudon:'Gyudon', kaitenzushi:'Kaitenzushi' },
+      de: { sushi:'Sushi', ramen:'Ramen', tempura:'Tempura', wagyu:'Wagyu', okonomiyaki:'Okonomiyaki', yakitori:'Yakitori', takoyaki:'Takoyaki', udon:'Udon', soba:'Soba', curry:'Curryreis', gyoza:'Gyoza', unagi:'Unagi', tonkatsu:'Tonkatsu', izakaya:'Izakaya', gyudon:'Gyudon', kaitenzushi:'Kaitenzushi' },
+      it: { sushi:'Sushi', ramen:'Ramen', tempura:'Tempura', wagyu:'Wagyu', okonomiyaki:'Okonomiyaki', yakitori:'Yakitori', takoyaki:'Takoyaki', udon:'Udon', soba:'Soba', curry:'Curry', gyoza:'Gyoza', unagi:'Unagi', tonkatsu:'Tonkatsu', izakaya:'Izakaya', gyudon:'Gyudon', kaitenzushi:'Kaitenzushi' },
+      ru: { sushi:'Суши', ramen:'Рамен', tempura:'Темпура', wagyu:'Вагю', okonomiyaki:'Окономияки', yakitori:'Якитори', takoyaki:'Такояки', udon:'Удон', soba:'Соба', curry:'Карри', gyoza:'Гёдза', unagi:'Унаги', tonkatsu:'Тонкацу', izakaya:'Идзакая', gyudon:'Гюдон', kaitenzushi:'Каитэнзуси' },
+      ja: { sushi:'寿司', ramen:'ラーメン', tempura:'天ぷら', wagyu:'和牛', okonomiyaki:'お好み焼き', yakitori:'焼き鳥', takoyaki:'たこ焼き', udon:'うどん', soba:'そば', curry:'カレーライス', gyoza:'餃子', unagi:'うなぎ', tonkatsu:'とんかつ', izakaya:'居酒屋', gyudon:'牛丼', kaitenzushi:'回転寿司' }
+    };
+
+    // 店舗データ (新規4種含む)
+    const shopsData = {
+      sushi: { tokyo:[{name:"Sushi Saito", url:"https://sushi-saito.com/"},{name:"Sukiyabashi Jiro", url:"https://www.sushi-jiro.jp/"}], osaka:[{name:"Sushi Nakagawa", url:"#"}], kyoto:[{name:"Sushi Matsumoto", url:"#"}], hiroshima:[{name:"Tenzushi Kyobashi", url:"#"}], fukuoka:[{name:"Tenzushi Tenjin", url:"#"}] },
+      ramen: { tokyo:[{name:"Homemade Ramen Muginae", url:"#"}], osaka:[{name:"Kadoya Shokudo", url:"#"}], kyoto:[{name:"Honke Daiichi Asahi", url:"#"}], hiroshima:[{name:"Bakudan-ya", url:"#"}], fukuoka:[{name:"Hakata Issou", url:"#"}] },
+      tempura: { tokyo:[{name:"Tempura Kondo", url:"https://www.tempura-kondo.com/"},{name:"Tempura Fukamachi", url:"#"}], osaka:[{name:"Tempura Makino", url:"#"}], kyoto:[{name:"Tempura Endo Yasaka", url:"#"}], hiroshima:[{name:"Tempura Takase", url:"#"}], fukuoka:[{name:"Tempura Hirao", url:"#"}] },
+      wagyu: { tokyo:[{name:"USHIGORO S.", url:"https://ushigoro-s.com/"},{name:"Imahan Ningyocho", url:"https://www.imahan.com/"}], osaka:[{name:"Harariju", url:"#"}], kyoto:[{name:"Mishima-tei", url:"https://www.mishima-tei.co.jp/"}], hiroshima:[{name:"Wagyukan Mizutani", url:"#"}], fukuoka:[{name:"Yakiniku Nakasu Nagao", url:"#"}] },
+      okonomiyaki: { tokyo:[{name:"Hiroshima-yaki Musashi", url:"#"}], osaka:[{name:"Kiji", url:"#"}], kyoto:[{name:"Okonomiyaki Teppan", url:"#"}], hiroshima:[{name:"Denkosekka", url:"#"}], fukuoka:[{name:"Teppan-yaki Sumi", url:"#"}] },
+      yakitori: { tokyo:[{name:"Torishiki", url:"#"},{name:"Birdland Ginza", url:"#"}], osaka:[{name:"Yakitori Isono", url:"#"}], kyoto:[{name:"Kashiwaya", url:"#"}], hiroshima:[{name:"Herahera", url:"#"}], fukuoka:[{name:"Yakitori Kawanaka", url:"#"}] },
+      takoyaki: { tokyo:[{name:"Ginza Corridor", url:"#"}], osaka:[{name:"Takoyaki Dotonbori Kukuru", url:"https://kukuru.jp/"},{name:"Takoyaki Wanaka", url:"#"}], kyoto:[{name:"Takoyaki Kobo", url:"#"}], hiroshima:[{name:"Takoyaki Takopei", url:"#"}], fukuoka:[{name:"Honke Takoyaki", url:"#"}] },
+      udon: { tokyo:[{name:"Togawa", url:"#"}], osaka:[{name:"Kamadake Udon", url:"#"}], kyoto:[{name:"Yamamoto Menzo", url:"#"}], hiroshima:[{name:"Sanuki Udon Hayashi", url:"#"}], fukuoka:[{name:"Udon Taira", url:"#"}] },
+      soba: { tokyo:[{name:"Namiki Yabusoba", url:"#"}], osaka:[{name:"Honke Sarashina", url:"#"}], kyoto:[{name:"Honke Owariya", url:"https://www.honke-owariya.co.jp/"}], hiroshima:[{name:"Soba Dokoro Ippuku", url:"#"}], fukuoka:[{name:"Soba Uchida", url:"#"}] },
+      curry: { tokyo:[{name:"Ethiopia", url:"#"}], osaka:[{name:"Indian Curry", url:"#"}], kyoto:[{name:"Spice Curry Rhythm", url:"#"}], hiroshima:[{name:"Curry Puran", url:"#"}], fukuoka:[{name:"Curry Toki", url:"#"}] },
+      gyoza: { tokyo:[{name:"Gyoza Yoshimura", url:"#"}], osaka:[{name:"Osaka Ohsho Dotonbori", url:"#"}], kyoto:[{name:"Gyoza Nonki", url:"#"}], hiroshima:[{name:"Gyoza Mitsuba", url:"#"}], fukuoka:[{name:"Hakata Hitokuchi Gyoza", url:"#"}] },
+      unagi: { tokyo:[{name:"Nodaiwa", url:"https://nodaiwa.co.jp/"}], osaka:[{name:"Yoshitora", url:"#"}], kyoto:[{name:"Hirokawa", url:"https://unagi-hirokawa.com/"}], hiroshima:[{name:"Unagi Hirose", url:"#"}], fukuoka:[{name:"Yoshizuka Unagi", url:"#"}] },
+      // 新規
+      tonkatsu: { tokyo:[{name:"Maisen Aoyama", url:"https://mai-sen.com/"},{name:"Tonkatsu Narikura", url:"#"}], osaka:[{name:"Tonkatsu Katsuya", url:"#"}], kyoto:[{name:"Katsukura", url:"https://www.katsukura.jp/"}], hiroshima:[{name:"Tonkatsu Wako", url:"#"}], fukuoka:[{name:"Hakata Tonkatsu Ozeki", url:"#"}] },
+      izakaya: { tokyo:[{name:"Torikizoku", url:"https://www.torikizoku.co.jp/"},{name:"Uoshin Noren", url:"#"}], osaka:[{name:"Hanabishi", url:"#"}], kyoto:[{name:"Izakaya Roku", url:"#"}], hiroshima:[{name:"Enotaro", url:"#"}], fukuoka:[{name:"Nakasu Yatai", url:"#"}] },
+      gyudon: { tokyo:[{name:"Yoshinoya", url:"https://www.yoshinoya.com/"},{name:"Sukiya", url:"https://www.sukiya.co.jp/"}], osaka:[{name:"Matsuya", url:"https://www.matsuyafoods.co.jp/"}], kyoto:[{name:"Yoshinoya Kyoto", url:"#"}], hiroshima:[{name:"Sukiya Hiroshima", url:"#"}], fukuoka:[{name:"Matsuya Fukuoka", url:"#"}] },
+      kaitenzushi: { tokyo:[{name:"Sushiro", url:"https://www.akindo-sushiro.co.jp/"},{name:"Kappa Sushi", url:"https://www.kappasushi.jp/"}], osaka:[{name:"Hamazushi", url:"https://www.hamazushi.com/"}], kyoto:[{name:"Kura Sushi", url:"https://www.kura-corpo.co.jp/"}], hiroshima:[{name:"Sushiro Hiroshima", url:"#"}], fukuoka:[{name:"Kaiten Sushi Ten", url:"#"}] }
+    };
+
+    function updateUILanguage() {
+      document.getElementById('app-title').innerText = translations[currentLang].title;
+      document.getElementById('footer-text').innerHTML = translations[currentLang].footer.replace(/\n/g,'<br>');
+      document.getElementById('theme-toggle').innerText = translations[currentLang].themeBtn;
+      renderHomeGrid();
+      if (!document.getElementById('home-view').classList.contains('hidden')) return;
+      const activeId = document.getElementById('detail-view').getAttribute('data-food-id');
+      if (activeId) showDetailView(activeId);
+    }
+
+    function renderHomeGrid() {
+      const container = document.getElementById('food-slider');
+      container.innerHTML = '';
+      foodData.forEach(food => {
+        const card = document.createElement('div');
+        card.className = 'food-card';
+        card.setAttribute('data-id', food.id);
+        const displayName = foodNames[currentLang][food.id] || food.id;
+        const descText = descriptions[currentLang][food.keyDesc] || '';
+        card.innerHTML = `
+          <div class="food-emoji">${food.emoji}</div>
+          <div class="food-name">${displayName}</div>
+          <div class="food-desc">${descText.substring(0, 70)}</div>
+        `;
+        card.addEventListener('click', () => showDetailView(food.id));
+        container.appendChild(card);
+      });
+    }
+
+    function showDetailView(foodId) {
+      const food = foodData.find(f => f.id === foodId);
+      if (!food) return;
+      const foodName = foodNames[currentLang][food.id];
+      const longDesc = descriptions[currentLang][food.keyDesc];
+      const shops = shopsData[food.id];
+      const cities = ['tokyo','osaka','kyoto','hiroshima','fukuoka'];
+      let shopsHtml = '';
+      for (let city of cities) {
+        const cityList = shops[city] || [];
+        if (cityList.length) {
+          shopsHtml += `<div class="city-shops"><div class="city-name">${translations[currentLang].cities[city]}</div><ul class="shop-list">`;
+          cityList.forEach(shop => {
+            shopsHtml += `<li><span class="shop-name">${shop.name}</span> <a href="${shop.url}" target="_blank" rel="noopener" class="shop-link">${currentLang === 'ja' ? '公式サイト' : 'Official Site'}</a></li>`;
+          });
+          shopsHtml += `</ul></div>`;
+        }
+      }
+      const detailHtml = `
+        <div class="detail-header">
+          <div class="detail-emoji">${food.emoji}</div>
+          <div class="detail-title">${foodName}</div>
+        </div>
+        <div class="detail-description">${longDesc}</div>
+        <div class="section-title">🍽️ ${currentLang === 'ja' ? '有名店リスト' : 'Famous Restaurants'}</div>
+        ${shopsHtml}
+        <div class="back-buttons">
+          <button class="back-btn" id="back-to-home">${translations[currentLang].backHome}</button>
+          <button class="back-btn" id="back-previous">${translations[currentLang].backPrev}</button>
+        </div>
+      `;
+      const detailDiv = document.getElementById('detail-view');
+      detailDiv.innerHTML = detailHtml;
+      detailDiv.setAttribute('data-food-id', food.id);
+      document.getElementById('home-view').classList.add('hidden');
+      detailDiv.classList.remove('hidden');
+      document.getElementById('back-to-home').addEventListener('click', () => showHomeView());
+      document.getElementById('back-previous').addEventListener('click', () => window.history.back());
+      window.history.pushState({ view: 'detail', id: food.id }, '', `#${food.id}`);
+    }
+
+    function showHomeView() {
+      document.getElementById('detail-view').classList.add('hidden');
+      document.getElementById('home-view').classList.remove('hidden');
+      window.history.pushState({ view: 'home' }, '', '#home');
+      renderHomeGrid();
+    }
+
+    function initLangButtons() {
+      const container = document.getElementById('lang-buttons');
+      for (const [code, label] of Object.entries(languages)) {
+        const btn = document.createElement('button');
+        btn.innerText = label;
+        btn.addEventListener('click', () => {
+          currentLang = code;
+          updateUILanguage();
+        });
+        container.appendChild(btn);
+      }
+    }
+
+    function initTheme() {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'light') {
+        document.body.classList.remove('dark');
+        document.body.classList.add('light');
+      } else {
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      }
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const isDark = document.body.classList.contains('dark');
+        if (isDark) {
+          document.body.classList.replace('dark', 'light');
+          localStorage.setItem('theme', 'light');
+        } else {
+          document.body.classList.replace('light', 'dark');
+          localStorage.setItem('theme', 'dark');
+        }
+      });
+    }
+
+    function route() {
+      const hash = window.location.hash.slice(1);
+      if (hash && hash !== 'home') {
+        const foodExists = foodData.some(f => f.id === hash);
+        if (foodExists) showDetailView(hash);
+        else showHomeView();
+      } else {
+        showHomeView();
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (document.getElementById('detail-view') && !document.getElementById('detail-view').classList.contains('hidden')) {
+        if (!window.location.hash || window.location.hash === '#home') showHomeView();
+        else {
+          const id = window.location.hash.slice(1);
+          if (id && foodData.some(f=>f.id===id)) showDetailView(id);
+          else showHomeView();
+        }
+      } else {
+        if (window.location.hash === '#home') showHomeView();
+        else route();
+      }
+    });
+
+    // PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registered', reg)).catch(err => console.log('SW error', err));
+      });
+    }
+
+    initLangButtons();
+    initTheme();
+    renderHomeGrid();
+    route();
+  </script>
+</body>
+</html>
