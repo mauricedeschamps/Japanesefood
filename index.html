@@ -86,7 +86,7 @@
       gap: 0.5rem;
     }
 
-    button {
+    button, .lang-btn {
       background-color: var(--btn-bg);
       border: none;
       padding: 0.4rem 0.8rem;
@@ -96,9 +96,12 @@
       cursor: pointer;
       color: var(--text);
       transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
     }
 
-    button:hover {
+    button:hover, .lang-btn:hover {
       background-color: var(--btn-hover);
       transform: scale(0.97);
     }
@@ -115,7 +118,6 @@
       padding: 0 1rem;
     }
 
-    /* 横スライド：縦4行 x 横にカードを並べる（1列=4個） */
     .food-slider {
       display: grid;
       grid-template-rows: repeat(4, auto);
@@ -152,8 +154,17 @@
       box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
     }
 
+    .food-image {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 0.75rem;
+      background-color: var(--btn-bg);
+    }
+
     .food-emoji {
-      font-size: 4.5rem;
+      font-size: 4rem;
       margin: 0.5rem 0;
     }
 
@@ -186,8 +197,12 @@
       margin-bottom: 1.5rem;
     }
 
-    .detail-emoji {
-      font-size: 4rem;
+    .detail-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 24px;
+      background: var(--btn-bg);
     }
 
     .detail-title {
@@ -201,6 +216,19 @@
       margin: 1.5rem 0 1rem 0;
       border-left: 4px solid #e67e22;
       padding-left: 0.75rem;
+    }
+
+    .detail-description {
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+
+    .tips {
+      background: var(--btn-bg);
+      padding: 1rem;
+      border-radius: 20px;
+      margin: 1rem 0;
+      font-style: italic;
     }
 
     .city-shops {
@@ -229,17 +257,29 @@
       padding: 0.5rem 0;
     }
 
+    .shop-info {
+      flex: 1;
+    }
+
     .shop-name {
-      font-weight: 500;
+      font-weight: 600;
+      display: block;
+    }
+
+    .shop-desc {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
     }
 
     .shop-link {
       color: #e67e22;
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       background: var(--btn-bg);
       padding: 0.2rem 0.7rem;
       border-radius: 30px;
+      white-space: nowrap;
+      margin-left: 0.5rem;
     }
 
     .shop-link:hover {
@@ -313,173 +353,379 @@
   </main>
 
   <footer class="app-footer">
-    <div id="footer-text">Contact us<br>mementomorikatsu@gmail.com</div>
+    <div id="footer-text">Contact us<br><a href="mailto:mementomorikatsu@gmail.com">mementomorikatsu@gmail.com</a></div>
   </footer>
 
   <script>
-    // ---------- 言語設定 ----------
-    const languages = { en: 'English', de: 'Deutsch', it: 'Italiano', ru: 'Русский', ja: '日本語' };
+    // ======================== 言語設定（国旗付き） ========================
+    const languages = {
+      en: { label: 'English', flag: '🇬🇧' },
+      de: { label: 'Deutsch', flag: '🇩🇪' },
+      it: { label: 'Italiano', flag: '🇮🇹' },
+      ru: { label: 'Русский', flag: '🇷🇺' },
+      ja: { label: '日本語', flag: '🇯🇵' }
+    };
     let currentLang = 'en';
 
     const translations = {
       en: {
         title: '🍱 Japan Food 16',
-        footer: 'Contact us\nmementomorikatsu@gmail.com',
+        footer: 'Contact us',
         themeBtn: '🌓 Dark/Light',
         backHome: '🏠 Home',
         backPrev: '◀ Back',
-        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' },
+        tipsLabel: '💡 Tips for Enjoying'
       },
       de: {
         title: '🍱 Japan Food 16',
-        footer: 'Kontakt\nmementomorikatsu@gmail.com',
+        footer: 'Kontakt',
         themeBtn: '🌓 Dunkel/Hell',
         backHome: '🏠 Startseite',
         backPrev: '◀ Zurück',
-        cities: { tokyo: 'Tokio', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+        cities: { tokyo: 'Tokio', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' },
+        tipsLabel: '💡 Tipps zum Genießen'
       },
       it: {
         title: '🍱 Giappone Cibo 16',
-        footer: 'Contattaci\nmementomorikatsu@gmail.com',
+        footer: 'Contattaci',
         themeBtn: '🌓 Scuro/Chiaro',
         backHome: '🏠 Home',
         backPrev: '◀ Indietro',
-        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' }
+        cities: { tokyo: 'Tokyo', osaka: 'Osaka', kyoto: 'Kyoto', hiroshima: 'Hiroshima', fukuoka: 'Fukuoka' },
+        tipsLabel: '💡 Consigli per gustare'
       },
       ru: {
         title: '🍱 Япония 16 блюд',
-        footer: 'Свяжитесь с нами\nmementomorikatsu@gmail.com',
+        footer: 'Свяжитесь с нами',
         themeBtn: '🌓 Тёмная/Светлая',
         backHome: '🏠 Главная',
         backPrev: '◀ Назад',
-        cities: { tokyo: 'Токио', osaka: 'Осака', kyoto: 'Киото', hiroshima: 'Хиросима', fukuoka: 'Фукуока' }
+        cities: { tokyo: 'Токио', osaka: 'Осака', kyoto: 'Киото', hiroshima: 'Хиросима', fukuoka: 'Фукуока' },
+        tipsLabel: '💡 Советы по употреблению'
       },
       ja: {
         title: '🍱 日本の美食16選',
-        footer: 'お問い合わせ\nmementomorikatsu@gmail.com',
+        footer: 'お問い合わせ',
         themeBtn: '🌓 ダーク/クリア',
         backHome: '🏠 ホーム',
         backPrev: '◀ 戻る',
-        cities: { tokyo: '東京', osaka: '大阪', kyoto: '京都', hiroshima: '広島', fukuoka: '福岡' }
+        cities: { tokyo: '東京', osaka: '大阪', kyoto: '京都', hiroshima: '広島', fukuoka: '福岡' },
+        tipsLabel: '💡 食べ方のヒント'
       }
     };
 
-    // ---------- 全16のフードデータ ----------
+    // ======================== フードデータ（画像URLは後で設定可） ========================
     const foodData = [
-      { id: 'sushi', emoji: '🍣', keyName: 'sushi', keyDesc: 'sushi_desc' },
-      { id: 'ramen', emoji: '🍜', keyName: 'ramen', keyDesc: 'ramen_desc' },
-      { id: 'tempura', emoji: '🍤', keyName: 'tempura', keyDesc: 'tempura_desc' },
-      { id: 'wagyu', emoji: '🥩', keyName: 'wagyu', keyDesc: 'wagyu_desc' },
-      { id: 'okonomiyaki', emoji: '🥘', keyName: 'okonomiyaki', keyDesc: 'okonomiyaki_desc' },
-      { id: 'yakitori', emoji: '🍢', keyName: 'yakitori', keyDesc: 'yakitori_desc' },
-      { id: 'takoyaki', emoji: '🐙', keyName: 'takoyaki', keyDesc: 'takoyaki_desc' },
-      { id: 'udon', emoji: '🍜', keyName: 'udon', keyDesc: 'udon_desc' },
-      { id: 'soba', emoji: '🍚', keyName: 'soba', keyDesc: 'soba_desc' },
-      { id: 'curry', emoji: '🍛', keyName: 'curry', keyDesc: 'curry_desc' },
-      { id: 'gyoza', emoji: '🥟', keyName: 'gyoza', keyDesc: 'gyoza_desc' },
-      { id: 'unagi', emoji: '🐟', keyName: 'unagi', keyDesc: 'unagi_desc' },
-      // 追加4種
-      { id: 'tonkatsu', emoji: '🐷', keyName: 'tonkatsu', keyDesc: 'tonkatsu_desc' },
-      { id: 'izakaya', emoji: '🍻', keyName: 'izakaya', keyDesc: 'izakaya_desc' },
-      { id: 'gyudon', emoji: '🐂', keyName: 'gyudon', keyDesc: 'gyudon_desc' },
-      { id: 'kaitenzushi', emoji: '🍣⚡', keyName: 'kaitenzushi', keyDesc: 'kaitenzushi_desc' }
+      { id: 'sushi', emoji: '🍣', imageUrl: '', keyName: 'sushi', keyDesc: 'sushi_desc', tips: 'sushi_tips' },
+      { id: 'ramen', emoji: '🍜', imageUrl: '', keyName: 'ramen', keyDesc: 'ramen_desc', tips: 'ramen_tips' },
+      { id: 'tempura', emoji: '🍤', imageUrl: '', keyName: 'tempura', keyDesc: 'tempura_desc', tips: 'tempura_tips' },
+      { id: 'wagyu', emoji: '🥩', imageUrl: '', keyName: 'wagyu', keyDesc: 'wagyu_desc', tips: 'wagyu_tips' },
+      { id: 'okonomiyaki', emoji: '🥘', imageUrl: '', keyName: 'okonomiyaki', keyDesc: 'okonomiyaki_desc', tips: 'okonomiyaki_tips' },
+      { id: 'yakitori', emoji: '🍢', imageUrl: '', keyName: 'yakitori', keyDesc: 'yakitori_desc', tips: 'yakitori_tips' },
+      { id: 'takoyaki', emoji: '🐙', imageUrl: '', keyName: 'takoyaki', keyDesc: 'takoyaki_desc', tips: 'takoyaki_tips' },
+      { id: 'udon', emoji: '🍜', imageUrl: '', keyName: 'udon', keyDesc: 'udon_desc', tips: 'udon_tips' },
+      { id: 'soba', emoji: '🍚', imageUrl: '', keyName: 'soba', keyDesc: 'soba_desc', tips: 'soba_tips' },
+      { id: 'curry', emoji: '🍛', imageUrl: '', keyName: 'curry', keyDesc: 'curry_desc', tips: 'curry_tips' },
+      { id: 'gyoza', emoji: '🥟', imageUrl: '', keyName: 'gyoza', keyDesc: 'gyoza_desc', tips: 'gyoza_tips' },
+      { id: 'unagi', emoji: '🐟', imageUrl: '', keyName: 'unagi', keyDesc: 'unagi_desc', tips: 'unagi_tips' },
+      { id: 'tonkatsu', emoji: '🐷', imageUrl: '', keyName: 'tonkatsu', keyDesc: 'tonkatsu_desc', tips: 'tonkatsu_tips' },
+      { id: 'izakaya', emoji: '🍻', imageUrl: '', keyName: 'izakaya', keyDesc: 'izakaya_desc', tips: 'izakaya_tips' },
+      { id: 'gyudon', emoji: '🐂', imageUrl: '', keyName: 'gyudon', keyDesc: 'gyudon_desc', tips: 'gyudon_tips' },
+      { id: 'kaitenzushi', emoji: '🍣⚡', imageUrl: '', keyName: 'kaitenzushi', keyDesc: 'kaitenzushi_desc', tips: 'kaitenzushi_tips' }
     ];
 
-    // 多言語説明文
+    // ======================== 多言語説明＆ヒント（全5言語・全16品） ========================
     const descriptions = {
       en: {
-        sushi_desc: 'Fresh vinegared rice with seafood. The essence of Japanese cuisine.',
-        ramen_desc: 'Noodle soup with rich broth. Regional varieties.',
-        tempura_desc: 'Lightly battered deep-fried seafood & vegetables. Crispy heaven.',
-        wagyu_desc: 'Premium Japanese beef with intense marbling. Melts in your mouth.',
-        okonomiyaki_desc: 'Savory pancake with cabbage, meat/seafood, topped with sauce.',
-        yakitori_desc: 'Grilled chicken skewers over charcoal. Simple yet addictive.',
-        takoyaki_desc: 'Ball-shaped snack with octopus, crispy outside, creamy inside.',
-        udon_desc: 'Thick wheat noodles in hot dashi broth. Chewy and comforting.',
-        soba_desc: 'Buckwheat noodles served hot or cold. Nutty and elegant.',
-        curry_desc: 'Japanese curry roux with vegetables & meat. Thick & mild sweet.',
-        gyoza_desc: 'Pan-fried dumplings with juicy pork and garlic filling.',
-        unagi_desc: 'Grilled eel glazed with sweet soy sauce. Luxurious and tender.',
-        tonkatsu_desc: 'Deep-fried breaded pork cutlet. Crispy outside, juicy inside.',
-        izakaya_desc: 'Japanese-style pub serving small shared dishes and drinks.',
-        gyudon_desc: 'Rice bowl topped with thinly sliced beef and onion simmered in sweet soy broth.',
-        kaitenzushi_desc: 'Conveyor belt sushi. Casual and fun way to enjoy fresh sushi.'
+        sushi_desc: 'Fresh vinegared rice topped with seafood. The essence of Japanese cuisine. Ranges from affordable conveyor-belt sushi to high-end omakase where the chef selects each piece.',
+        sushi_tips: 'Eat with your hands or chopsticks. Dip fish-side (not rice) into soy sauce. Enjoy pickled ginger between pieces to cleanse palate.',
+        ramen_desc: 'Noodle soup with rich broth (soy, miso, tonkotsu). Regional varieties include Hakata (pork bone), Sapporo (miso), and Tokyo (shoyu).',
+        ramen_tips: 'Slurping is polite! It enhances flavor and cools noodles. Drink the broth completely to honor the chef.',
+        tempura_desc: 'Lightly battered deep-fried seafood & vegetables. Crispy heaven. Traditionally served with tentsuyu dipping sauce or salt.',
+        tempura_tips: 'Eat immediately while crispy. Dip lightly into sauce. Try with grated daikon radish in sauce for freshness.',
+        wagyu_desc: 'Premium Japanese beef with intense marbling. Melts in your mouth. Famous brands: Kobe, Matsusaka, Omi.',
+        wagyu_tips: 'Cook briefly over high heat. Don’t overcook – rare to medium is best. Savor the fat’s umami.',
+        okonomiyaki_desc: 'Savory pancake with cabbage, meat/seafood, topped with sauce, mayo, bonito flakes, and seaweed.',
+        okonomiyaki_tips: 'Cook on the teppan (iron plate) at your table. Hiroshima style layers ingredients, Osaka style mixes them.',
+        yakitori_desc: 'Grilled chicken skewers over charcoal. Simple yet addictive. Includes chicken breast (mune), thigh (momo), skin (kawa), and liver (reba).',
+        yakitori_tips: 'Try "tare" (sweet soy glaze) or "shio" (salt). Eat each skewer within minutes of grilling.',
+        takoyaki_desc: 'Ball-shaped snack with octopus, crispy outside, creamy inside. Drizzled with takoyaki sauce, mayo, and bonito.',
+        takoyaki_tips: 'Use a toothpick to handle. Be careful – the inside is very hot! Some eat with chopsticks.',
+        udon_desc: 'Thick wheat noodles in hot dashi broth. Chewy and comforting. Often topped with tempura, green onion, or a raw egg.',
+        udon_tips: 'Slurp loudly! Add shichimi (seven spice) or grated ginger for kick. Drink the broth.',
+        soba_desc: 'Buckwheat noodles served hot or cold. Nutty and elegant. Cold soba is dipped in tsuyu sauce.',
+        soba_tips: 'For cold soba, dip only the tip of noodles. After finishing, the soba-yu (hot noodle water) is mixed with remaining tsuyu as a digestif.',
+        curry_desc: 'Japanese curry roux with vegetables & meat. Thick & mildly sweet. Often served with pickled fukujinzuke.',
+        curry_tips: 'Mix everything thoroughly. Eat rice with curry from the side of the spoon. Add tonkatsu for katsu-curry.',
+        gyoza_desc: 'Pan-fried dumplings with juicy pork and garlic filling. Crispy bottom, soft top.',
+        gyoza_tips: 'Dip in a mix of soy sauce, vinegar, and chili oil. Eat whole in one bite.',
+        unagi_desc: 'Grilled eel glazed with sweet soy sauce. Luxurious and tender. Usually served over rice (unadon).',
+        unagi_tips: 'Traditionally eaten on "Doyo no Ushi no Hi" (midsummer day) for stamina. Avoid bones carefully.',
+        tonkatsu_desc: 'Deep-fried breaded pork cutlet. Crispy outside, juicy inside. Served with shredded cabbage and tonkatsu sauce.',
+        tonkatsu_tips: 'Pour sauce directly on meat or as dip. Eat cabbage with sesame dressing. Try katsudon (rice bowl version).',
+        izakaya_desc: 'Japanese-style pub serving small shared dishes and drinks. Great variety: edamame, sashimi, karaage, etc.',
+        izakaya_tips: 'Order a drink first (beer, sake, highball). Share dishes with friends. Otoshi (small appetizer) is standard.',
+        gyudon_desc: 'Rice bowl topped with thinly sliced beef and onion simmered in sweet soy broth. Fast, cheap, delicious.',
+        gyudon_tips: 'Add a raw egg or grated ginger. Mix well before eating. Choose topping like green onion or cheese.',
+        kaitenzushi_desc: 'Conveyor belt sushi. Casual and fun way to enjoy fresh sushi. Plates priced by color.',
+        kaitenzushi_tips: 'Grab plates from belt or order via touchscreen. Don’t return plates to belt. Drink green tea from the tap.'
       },
       de: {
-        sushi_desc: 'Frischer Reis mit Meeresfrüchten. Essenz der japanischen Küche.',
-        ramen_desc: 'Nudelsuppe mit reichhaltiger Brühe. Viele regionale Stile.',
-        tempura_desc: 'Leicht panierte frittierte Meeresfrüchte & Gemüse. Knusprig.',
-        wagyu_desc: 'Hochwertiges japanisches Rindfleisch mit intensiver Marmorierung.',
-        okonomiyaki_desc: 'Herzhafter Pfannkuchen mit Kohl & Fleisch/Meeresfrüchten.',
+        sushi_desc: 'Frischer Reis mit Meeresfrüchten. Essenz der japanischen Küche. Von preiswertem Band-Sushi bis zu High-End-Omakase.',
+        sushi_tips: 'Mit Händen oder Stäbchen essen. Die Fischseite in Sojasauce tauchen. Eingelegter Ingwer erfrischt den Gaumen.',
+        ramen_desc: 'Nudelsuppe mit reichhaltiger Brühe (Soja, Miso, Tonkotsu). Regionale Stile: Hakata, Sapporo, Tokio.',
+        ramen_tips: 'Schlürfen ist höflich! Es verstärkt den Geschmack. Die Brühe vollständig austrinken.',
+        tempura_desc: 'Leicht panierte frittierte Meeresfrüchte & Gemüse. Knusprig. Serviert mit Tentsuyu oder Salz.',
+        tempura_tips: 'Sofort essen. Leicht in Soße tauchen. Mit gerettetem Rettich erfrischen.',
+        wagyu_desc: 'Hochwertiges japanisches Rindfleisch mit intensiver Marmorierung. Schmilzt auf der Zunge.',
+        wagyu_tips: 'Kurz bei hoher Hitze garen. Nicht zu lange – rosa ist am besten.',
+        okonomiyaki_desc: 'Herzhafter Pfannkuchen mit Kohl, Fleisch/Meeresfrüchten. Toppings: Sauce, Mayo, Bonito, Algen.',
+        okonomiyaki_tips: 'Auf dem Teppan am Tisch braten. Hiroshima schichtet, Osaka mischt.',
         yakitori_desc: 'Gegrillte Hähnchenspieße über Holzkohle. Einfach süchtig machend.',
-        takoyaki_desc: 'Bällchen mit Oktopus, knusprig außen, cremig innen.',
-        udon_desc: 'Dicke Weizennudeln in heißer Dashi-Brühe.',
-        soba_desc: 'Buchweizennudeln heiß oder kalt. Nussig & elegant.',
-        curry_desc: 'Japanisches Curry mit Gemüse & Fleisch. Mild & süßlich.',
-        gyoza_desc: 'Gebratene Teigtaschen mit saftigem Schweinefleisch & Knoblauch.',
-        unagi_desc: 'Gegrillter Aal mit süßer Sojasoße. Luxuriös und zart.',
-        tonkatsu_desc: 'Panierter Schweinekotelett, frittiert. Knusprig außen, saftig innen.',
-        izakaya_desc: 'Japanische Kneipe mit kleinen Gerichten und Getränken.',
+        yakitori_tips: 'Probiere "Tare" (süße Sojasauce) oder "Shio" (Salz). Jeden Spieß sofort genießen.',
+        takoyaki_desc: 'Bällchen mit Oktopus, knusprig außen, cremig innen. Mit Sauce, Mayo, Bonito.',
+        takoyaki_tips: 'Mit Zahnstocher vorsichtig umgehen – innen sehr heiß!',
+        udon_desc: 'Dicke Weizennudeln in heißer Dashi-Brühe. Zäh und wohltuend.',
+        udon_tips: 'Laut schlürfen. Mit Shichimi oder geriebenem Ingwer würzen.',
+        soba_desc: 'Buchweizennudeln heiß oder kalt. Nussig & elegant. Kalt in Tsuyu getunkt.',
+        soba_tips: 'Bei kalten Soba nur die Spitze eintauchen. Nach dem Essen Soba-yu mit Tsuyu mischen.',
+        curry_desc: 'Japanisches Curry mit Gemüse & Fleisch. Dickflüssig und mild süßlich.',
+        curry_tips: 'Alles gut mischen. Mit dem Löffel essen. Katsu-Curry probieren.',
+        gyoza_desc: 'Gebratene Teigtaschen mit saftigem Schweinefleisch & Knoblauch. Knusprig unten, weich oben.',
+        gyoza_tips: 'In Sojasauce, Essig und Chiliöl tunken. Am Stück essen.',
+        unagi_desc: 'Gegrillter Aal mit süßer Sojasoße. Luxuriös und zart. Meist über Reis (Unadon).',
+        unagi_tips: 'Traditionell an "Doyo no Ushi no Hi" gegessen. Vorsicht vor Gräten.',
+        tonkatsu_desc: 'Panierter Schweinekotelett, frittiert. Knusprig außen, saftig innen. Mit Kraut und Sauce.',
+        tonkatsu_tips: 'Sauce direkt aufs Fleisch geben. Kraut mit Sesamdressing essen. Katsudon probieren.',
+        izakaya_desc: 'Japanische Kneipe mit kleinen Gerichten und Getränken. Vielfalt: Edamame, Sashimi, Karaage.',
+        izakaya_tips: 'Zuerst ein Getränk bestellen. Gerichte teilen. Otoshi ist üblich.',
         gyudon_desc: 'Reisschale mit dünn geschnittenem Rindfleisch und Zwiebeln in süßer Sojasauce.',
-        kaitenzushi_desc: 'Sushi vom Laufband. Lässige Art, frischen Sushi zu genießen.'
+        gyudon_tips: 'Rohes Ei oder geriebenen Ingwer hinzufügen. Gut mischen.',
+        kaitenzushi_desc: 'Sushi vom Laufband. Lässig und unterhaltsam. Teller farblich codiert.',
+        kaitenzushi_tips: 'Teller vom Band nehmen oder per Touchscreen bestellen. Keine Teller zurücklegen.'
       },
       it: {
-        sushi_desc: 'Riso all’aceto con pesce. L’essenza della cucina giapponese.',
-        ramen_desc: 'Zuppa di noodle con brodo ricco. Variazioni regionali.',
-        tempura_desc: 'Frutti di mare e verdure pastellate e fritte. Croccanti.',
-        wagyu_desc: 'Manzo giapponese pregiato con marezzatura intensa.',
-        okonomiyaki_desc: 'Frittata salata con cavolo e carne/frutti di mare.',
-        yakitori_desc: 'Spiedini di pollo alla griglia. Semplicemente irresistibili.',
-        takoyaki_desc: 'Polpette di polpo, croccanti fuori e cremose dentro.',
-        udon_desc: 'Spesse tagliatelle di grano in brodo caldo.',
-        soba_desc: 'Tagliatelle di grano saraceno. Sapore di nocciola elegante.',
-        curry_desc: 'Curry giapponese con verdure e carne. Dolce e denso.',
-        gyoza_desc: 'Ravioli saltati in padella con maiale succoso e aglio.',
-        unagi_desc: 'Anguilla grigliata glassata con salsa di soia dolce.',
-        tonkatsu_desc: 'Cotoletta di maiale impanata e fritta. Croccante fuori, succosa dentro.',
-        izakaya_desc: 'Pub giapponese con piccoli piatti condivisi e bevande.',
+        sushi_desc: 'Riso all’aceto con pesce. Essenza della cucina giapponese. Dal conveniente sushi su nastro all’omakase di lusso.',
+        sushi_tips: 'Mangiare con le mani o con le bacchette. Immergere la parte del pesce nella salsa di soia. Zenzero sottaceto tra un pezzo e l’altro.',
+        ramen_desc: 'Zuppa di noodle con brodo ricco (soia, miso, tonkotsu). Varietà regionali: Hakata, Sapporo, Tokyo.',
+        ramen_tips: 'Sorseggiare è educato! Esalta il sapore. Bere tutto il brodo.',
+        tempura_desc: 'Frutti di mare e verdure pastellate e fritte. Croccanti. Servite con salsa tentsuyu o sale.',
+        tempura_tips: 'Mangiare subito. Intingere leggermente. Provare con ravanello grattugiato.',
+        wagyu_desc: 'Manzo giapponese pregiato con marezzatura intensa. Si scioglie in bocca.',
+        wagyu_tips: 'Cuocere brevemente a fuoco vivo. Non troppo – al sangue o media è meglio.',
+        okonomiyaki_desc: 'Frittata salata con cavolo, carne/frutti di mare. Condita con salsa, maionese, bonito, alghe.',
+        okonomiyaki_tips: 'Cuocere sulla piastra al tavolo. Stile Hiroshima a strati, Osaka mescola.',
+        yakitori_desc: 'Spiedini di pollo alla griglia su carbone. Semplicemente irresistibili.',
+        yakitori_tips: 'Prova "tare" (salsa dolce) o "shio" (sale). Mangia ogni spiedino subito.',
+        takoyaki_desc: 'Polpette di polpo, croccanti fuori e cremose dentro. Con salsa, maionese, bonito.',
+        takoyaki_tips: 'Usa uno stuzzicadenti. Attenzione: dentro è molto caldo!',
+        udon_desc: 'Spesse tagliatelle di grano in brodo dashi caldo. Morbide e confortanti.',
+        udon_tips: 'Sorseggia rumorosamente. Aggiungi shichimi o zenzero grattugiato.',
+        soba_desc: 'Tagliatelle di grano saraceno servite calde o fredde. Gusto di nocciola elegante.',
+        soba_tips: 'Per le soba fredde, immergi solo la punta. Dopo, mescola soba-yu con la salsa avanzata.',
+        curry_desc: 'Curry giapponese con verdure e carne. Densità e dolcezza delicata.',
+        curry_tips: 'Mescola tutto bene. Mangia con il cucchiaio. Prova il katsu-curry.',
+        gyoza_desc: 'Ravioli saltati in padella con maiale succoso e aglio. Croccanti sotto, morbidi sopra.',
+        gyoza_tips: 'Immergi in salsa di soia, aceto e olio al peperoncino. Mangia interi.',
+        unagi_desc: 'Anguilla grigliata glassata con salsa di soia dolce. Lussuosa e tenera.',
+        unagi_tips: 'Tradizionalmente mangiata a metà estate per la resistenza. Attenzione alle lische.',
+        tonkatsu_desc: 'Cotoletta di maiale impanata e fritta. Croccante fuori, succosa dentro. Con cavolo e salsa.',
+        tonkatsu_tips: 'Versa la salsa direttamente. Il cavolo con sesamo. Prova il katsudon.',
+        izakaya_desc: 'Pub giapponese con piccoli piatti da condividere. Ampia scelta: edamame, sashimi, karaage.',
+        izakaya_tips: 'Ordina prima una bevanda. Condividi i piatti. L’otoshi è di rigore.',
         gyudon_desc: 'Ciotola di riso con manzo affettato e cipolla stufati in salsa dolce di soia.',
-        kaitenzushi_desc: 'Sushi su nastro trasportatore. Modo divertente e informale.'
+        gyudon_tips: 'Aggiungi un uovo crudo o zenzero grattugiato. Mescola bene.',
+        kaitenzushi_desc: 'Sushi su nastro trasportatore. Modo informale e divertente. Piatti colorati a prezzi diversi.',
+        kaitenzushi_tips: 'Prendi i piatti dal nastro o ordina al touchscreen. Non rimetti i piatti indietro.'
       },
       ru: {
-        sushi_desc: 'Свежий рис с морепродуктами. Суть японской кухни.',
-        ramen_desc: 'Лапша в насыщенном бульоне. Региональные стили.',
-        tempura_desc: 'Морепродукты и овощи в легком кляре. Хрустящие.',
-        wagyu_desc: 'Японская говядина с интенсивной мраморностью.',
-        okonomiyaki_desc: 'Пикантный блин с капустой, мясом/морепродуктами.',
+        sushi_desc: 'Свежий рис с морепродуктами. Суть японской кухни. От доступного суши на конвейере до дорогого омакасе.',
+        sushi_tips: 'Ешьте руками или палочками. Макайте стороной рыбы в соевый соус. Маринованный имбирь между кусочками.',
+        ramen_desc: 'Лапша в насыщенном бульоне (соевый, мисо, тонкоцу). Региональные стили: Хаката, Саппоро, Токио.',
+        ramen_tips: 'Хлюпать вежливо! Усиливает вкус. Выпейте бульон до конца.',
+        tempura_desc: 'Морепродукты и овощи в легком кляре. Хрустящие. Подается с соусом тэнцую или солью.',
+        tempura_tips: 'Ешьте сразу. Макайте слегка. Попробуйте с тертой редькой дайкон.',
+        wagyu_desc: 'Японская говядина премиум-класса с интенсивной мраморностью. Тает во рту.',
+        wagyu_tips: 'Готовьте быстро на сильном огне. Не пережаривайте – слабой прожарки лучше всего.',
+        okonomiyaki_desc: 'Пикантный блин с капустой, мясом/морепродуктами. Поливается соусом, майонезом, бонито, водорослями.',
+        okonomiyaki_tips: 'Готовьте на теппане за столом. В Хиросиме слоями, в Осаке смешивают.',
         yakitori_desc: 'Куриные шашлычки на углях. Просто и вкусно.',
-        takoyaki_desc: 'Шарики с осьминогом, хрустящие снаружи, нежные внутри.',
-        udon_desc: 'Толстая пшеничная лапша в горячем бульоне даси.',
-        soba_desc: 'Гречневая лапша горячая или холодная.',
+        yakitori_tips: 'Попробуйте "тарэ" (сладкий соевый соус) или "сио" (соль). Ешьте каждый шашлык сразу.',
+        takoyaki_desc: 'Шарики с осьминогом, хрустящие снаружи, нежные внутри. С соусом, майонезом, бонито.',
+        takoyaki_tips: 'Используйте зубочистку. Осторожно – внутри очень горячо!',
+        udon_desc: 'Толстая пшеничная лапша в горячем бульоне даси. Жевательная и уютная.',
+        udon_tips: 'Громко хлюпайте. Добавьте ситими или тертый имбирь.',
+        soba_desc: 'Гречневая лапша горячая или холодная. Ореховый и элегантный вкус.',
+        soba_tips: 'Для холодной соба макайте только кончик. После еды смешайте соба-ю с оставшейся цую.',
         curry_desc: 'Японское карри с овощами и мясом. Густое и сладковатое.',
-        gyoza_desc: 'Жареные пельмени с сочной свининой и чесноком.',
-        unagi_desc: 'Угорь на гриле в сладком соевом соусе.',
-        tonkatsu_desc: 'Свиная отбивная в панировке фри. Хрустящая снаружи, сочная внутри.',
-        izakaya_desc: 'Японский паб с небольшими закусками и напитками.',
+        curry_tips: 'Все тщательно перемешайте. Ешьте ложкой. Попробуйте кацу-карри.',
+        gyoza_desc: 'Жареные пельмени с сочной свининой и чесноком. Хрустящие снизу, мягкие сверху.',
+        gyoza_tips: 'Макайте в смесь соевого соуса, уксуса и чили. Ешьте целиком.',
+        unagi_desc: 'Угорь на гриле в сладком соевом соусе. Роскошный и нежный. Подается с рисом (унадон).',
+        unagi_tips: 'Традиционно едят в середине лета для выносливости. Осторожно с костями.',
+        tonkatsu_desc: 'Свиная отбивная в панировке фри. Хрустящая снаружи, сочная внутри. С капустой и соусом.',
+        tonkatsu_tips: 'Полейте соусом прямо на мясо. Ешьте капусту с кунжутной заправкой. Попробуйте кацудон.',
+        izakaya_desc: 'Японский паб с небольшими закусками и напитками. Большой выбор: эдамамэ, сашими, караагэ.',
+        izakaya_tips: 'Сначала закажите напиток. Делитесь блюдами. Отоси (маленькая закуска) стандартен.',
         gyudon_desc: 'Миска риса с тонко нарезанной говядиной и луком в сладком соевом соусе.',
-        kaitenzushi_desc: 'Суши с конвейерной ленты. Весело и неформально.'
+        gyudon_tips: 'Добавьте сырое яйцо или тертый имбирь. Хорошо перемешайте.',
+        kaitenzushi_desc: 'Суши с конвейерной ленты. Непринужденно и весело. Тарелки цветные – разные цены.',
+        kaitenzushi_tips: 'Берите тарелки с ленты или заказывайте через сенсорный экран. Не возвращайте тарелки.'
       },
       ja: {
-        sushi_desc: '酢飯と新鮮な海鮮。和食の極み。',
-        ramen_desc: '濃厚なスープの麺料理。醤油、味噌、豚骨が代表的。',
-        tempura_desc: '海老や野菜を軽く揚げた、サクサクの天ぷら。',
-        wagyu_desc: '霜降り和牛。とろける食感。',
-        okonomiyaki_desc: 'キャベツや具材を鉄板で焼くお好み焼き。',
-        yakitori_desc: '炭火で焼いた鶏串。シンプルな美味しさ。',
-        takoyaki_desc: '外カリッと中トロ。たこ焼き。',
-        udon_desc: 'コシの強い太麺とだしのうどん。',
-        soba_desc: 'そばの実の香り高い蕎麦。',
-        curry_desc: 'とろみとコクの日本のカレー。',
+        sushi_desc: '酢飯と新鮮な海鮮が織りなす和食の極み。回転寿司から高級おまかせまで幅広い。',
+        sushi_tips: '手や箸で食べる。醤油は魚の身側につける。ガリで口の中をリセット。',
+        ramen_desc: '濃厚なスープの麺料理。醤油、味噌、豚骨が代表的。博多、札幌、東京など地域で異なる。',
+        ramen_tips: 'すすると香りが広がる。最後までスープを飲み干すのが店主への礼儀。',
+        tempura_desc: '海老や野菜を軽く衣で揚げた天ぷら。サクサクの極み。天つゆまたは塩で。',
+        tempura_tips: '揚げたてをすぐに。軽くつゆにつける。大根おろしでさっぱり。',
+        wagyu_desc: '霜降り和牛。とろける食感。神戸、松阪、近江などブランド多数。',
+        wagyu_tips: '強火でさっと焼く。レア～ミディアムがベスト。脂の旨味を堪能。',
+        okonomiyaki_desc: 'キャベツや具材を鉄板で焼くお好み焼き。ソース、マヨ、かつお節、青海苔。',
+        okonomiyaki_tips: '自分で焼くのも楽しい。広島風は重ねる、大阪風は混ぜる。',
+        yakitori_desc: '炭火で焼いた鶏串。シンプルな美味しさ。むね、もも、かわ、レバーなど。',
+        yakitori_tips: 'タレか塩で。焼きたてをすぐに。',
+        takoyaki_desc: '外カリッと中トロ。たこ焼き。ソース、マヨ、かつお節をかけて。',
+        takoyaki_tips: '楊枝で転がしながら。中は熱いので注意。',
+        udon_desc: 'コシの強い太麺とだしのうどん。讃岐、博多、きしめんなど。',
+        udon_tips: '豪快にすする。七味や生姜で味変。出汁も飲み干す。',
+        soba_desc: 'そばの実の香り高い蕎麦。もりそば、かけそば。',
+        soba_tips: '冷たい蕎麦は先端だけつゆに。食べ終わったら蕎麦湯を注いで。',
+        curry_desc: 'とろみとコクの日本のカレー。野菜と肉が溶け込む。',
+        curry_tips: 'ルーとご飯をしっかり混ぜる。スプーンの側面ですくう。カツカレーも。',
         gyoza_desc: 'パリッと焼いた餃子。ニンニク効いたジューシーな餡。',
-        unagi_desc: 'ふっくら蒲焼きのうなぎ。',
-        tonkatsu_desc: 'サクサク衣のジューシーな豚カツ。かつ丼も絶品。',
-        izakaya_desc: '居酒屋。お酒と小皿料理を楽しむ大人の社交場。',
-        gyudon_desc: '甘辛く煮た牛肉と玉ねぎをのせた牛丼。',
-        kaitenzushi_desc: '回転寿司。リーズナブルに新鮮な寿司を楽しめる。'
+        gyoza_tips: '醤油、酢、ラー油を合わせて。一口でどうぞ。',
+        unagi_desc: 'ふっくら蒲焼きのうなぎ。甘いタレが絶品。うな重やひつまぶし。',
+        unagi_tips: '土用の丑の日に食べるとスタミナ付く。小骨に注意。',
+        tonkatsu_desc: 'サクサク衣のジューシーな豚カツ。キャベツとソースで。かつ丼も。',
+        tonkatsu_tips: 'ソースは直接かけるかディップ。キャベツはごまドレッシングで。',
+        izakaya_desc: '居酒屋。お酒と小皿料理を楽しむ大人の社交場。枝豆、刺身、唐揚げなど。',
+        izakaya_tips: 'とりあえず生ビール。みんなでシェア。お通しはおまかせ。',
+        gyudon_desc: '甘辛く煮た牛肉と玉ねぎをのせた牛丼。早い、安い、うまい。',
+        gyudon_tips: '生卵や紅生姜をのせて。よく混ぜて。',
+        kaitenzushi_desc: '回転寿司。リーズナブルに新鮮な寿司を楽しめる。皿の色で値段が違う。',
+        kaitenzushi_tips: 'レーンから取るかタッチパネルで注文。食べ終わった皿は戻さない。'
       }
     };
 
-    // 各言語の料理名マップ
+    // ======================== 店舗データ（説明文付き・公式URL優先） ========================
+    const shopsData = {
+      sushi: {
+        tokyo: [{name:"Sushi Saito", desc:"ミシュラン三つ星、予約困難", url:"https://sushi-saito.com/"},{name:"Sukiyabashi Jiro", desc:"『二郎』のカウンターのみ", url:"https://www.sushi-jiro.jp/"}],
+        osaka: [{name:"Sushi Nakagawa", desc:"北新地の実力派", url:"#"}],
+        kyoto: [{name:"Sushi Matsumoto", desc:"祇園の隠れ家", url:"#"}],
+        hiroshima: [{name:"Tenzushi Kyobashi", desc:"広島流の寿司", url:"#"}],
+        fukuoka: [{name:"Tenzushi Tenjin", desc:"九州の食材を活かす", url:"#"}]
+      },
+      ramen: {
+        tokyo: [{name:"Homemade Ramen Muginae", desc:"無化調の極み", url:"#"}],
+        osaka: [{name:"Kadoya Shokudo", desc:"大阪のソウルフード", url:"#"}],
+        kyoto: [{name:"Honke Daiichi Asahi", desc:"京風醤油ラーメンの元祖", url:"#"}],
+        hiroshima: [{name:"Bakudan-ya", desc:"広島つけ麺の有名店", url:"#"}],
+        fukuoka: [{name:"Hakata Issou", desc:"泡系豚骨の先駆け", url:"#"}]
+      },
+      tempura: {
+        tokyo: [{name:"Tempura Kondo", desc:"ミシュラン二つ星", url:"https://www.tempura-kondo.com/"},{name:"Tempura Fukamachi", desc:"銀座の名店", url:"#"}],
+        osaka: [{name:"Tempura Makino", desc:"カウンターで揚げたて", url:"#"}],
+        kyoto: [{name:"Tempura Endo Yasaka", desc:"祇園の伝統", url:"#"}],
+        hiroshima: [{name:"Tempura Takase", desc:"広島の穴場", url:"#"}],
+        fukuoka: [{name:"Tempura Hirao", desc:"天神の行列店", url:"#"}]
+      },
+      wagyu: {
+        tokyo: [{name:"USHIGORO S.", desc:"銀座の焼肉", url:"https://ushigoro-s.com/"},{name:"Imahan Ningyocho", desc:"すき焼きの老舗", url:"https://www.imahan.com/"}],
+        osaka: [{name:"Harariju", desc:"肉の百名店", url:"#"}],
+        kyoto: [{name:"Mishima-tei", desc:"京都のすき焼き", url:"https://www.mishima-tei.co.jp/"}],
+        hiroshima: [{name:"Wagyukan Mizutani", desc:"和牛専門", url:"#"}],
+        fukuoka: [{name:"Yakiniku Nakasu Nagao", desc:"中洲の焼肉", url:"#"}]
+      },
+      okonomiyaki: {
+        tokyo: [{name:"Hiroshima-yaki Musashi", desc:"東京で広島焼き", url:"#"}],
+        osaka: [{name:"Kiji", desc:"梅田の行列店", url:"#"}],
+        kyoto: [{name:"Okonomiyaki Teppan", desc:"四条の鉄板焼き", url:"#"}],
+        hiroshima: [{name:"Denkosekka", desc:"卵がふわふわ", url:"#"}],
+        fukuoka: [{name:"Teppan-yaki Sumi", desc:"天神の鉄板焼き", url:"#"}]
+      },
+      yakitori: {
+        tokyo: [{name:"Torishiki", desc:"ミシュランビブグルマン", url:"#"},{name:"Birdland Ginza", desc:"銀座の高級焼き鳥", url:"#"}],
+        osaka: [{name:"Yakitori Isono", desc:"難波の名店", url:"#"}],
+        kyoto: [{name:"Kashiwaya", desc:"木屋町の老舗", url:"#"}],
+        hiroshima: [{name:"Herahera", desc:"薬研堀のスタンダード", url:"#"}],
+        fukuoka: [{name:"Yakitori Kawanaka", desc:"中洲の有名店", url:"#"}]
+      },
+      takoyaki: {
+        tokyo: [{name:"Ginza Corridor", desc:"銀座のたこ焼きバー", url:"#"}],
+        osaka: [{name:"Takoyaki Dotonbori Kukuru", desc:"道頓堀の定番", url:"https://kukuru.jp/"},{name:"Takoyaki Wanaka", desc:"アメリカ村の人気店", url:"#"}],
+        kyoto: [{name:"Takoyaki Kobo", desc:"四条河原町", url:"#"}],
+        hiroshima: [{name:"Takoyaki Takopei", desc:"本通商店街", url:"#"}],
+        fukuoka: [{name:"Honke Takoyaki", desc:"天神の老舗", url:"#"}]
+      },
+      udon: {
+        tokyo: [{name:"Togawa", desc:"神田のコシ", url:"#"}],
+        osaka: [{name:"Kamadake Udon", desc:"北浜の釜揚げ", url:"#"}],
+        kyoto: [{name:"Yamamoto Menzo", desc:"東山の名店", url:"#"}],
+        hiroshima: [{name:"Sanuki Udon Hayashi", desc:"讃岐うどん専門", url:"#"}],
+        fukuoka: [{name:"Udon Taira", desc:"博多の柔らかうどん", url:"#"}]
+      },
+      soba: {
+        tokyo: [{name:"Namiki Yabusoba", desc:"浅草の老舗", url:"#"}],
+        osaka: [{name:"Honke Sarashina", desc:"北新地の蕎懐石", url:"#"}],
+        kyoto: [{name:"Honke Owariya", desc:"五百年の歴史", url:"https://www.honke-owariya.co.jp/"}],
+        hiroshima: [{name:"Soba Dokoro Ippuku", desc:"紙屋町の隠れ家", url:"#"}],
+        fukuoka: [{name:"Soba Uchida", desc:"薬院の手打ち蕎麦", url:"#"}]
+      },
+      curry: {
+        tokyo: [{name:"Ethiopia", desc:"渋谷の有名店", url:"#"}],
+        osaka: [{name:"Indian Curry", desc:"北浜の老舗", url:"#"}],
+        kyoto: [{name:"Spice Curry Rhythm", desc:"四条のスパイスカレー", url:"#"}],
+        hiroshima: [{name:"Curry Puran", desc:"本通の欧風カレー", url:"#"}],
+        fukuoka: [{name:"Curry Toki", desc:"天神のスープカレー", url:"#"}]
+      },
+      gyoza: {
+        tokyo: [{name:"Gyoza Yoshimura", desc:"池袋の行列店", url:"#"}],
+        osaka: [{name:"Osaka Ohsho Dotonbori", desc:"餃子の王将本店", url:"#"}],
+        kyoto: [{name:"Gyoza Nonki", desc:"四条の人気店", url:"#"}],
+        hiroshima: [{name:"Gyoza Mitsuba", desc:"薬研堀のパリパリ餃子", url:"#"}],
+        fukuoka: [{name:"Hakata Hitokuchi Gyoza", desc:"一口餃子発祥", url:"#"}]
+      },
+      unagi: {
+        tokyo: [{name:"Nodaiwa", desc:"麻布の老舗", url:"https://nodaiwa.co.jp/"}],
+        osaka: [{name:"Yoshitora", desc:"天神橋の名店", url:"#"}],
+        kyoto: [{name:"Hirokawa", desc:"嵐山のうなぎ", url:"https://unagi-hirokawa.com/"}],
+        hiroshima: [{name:"Unagi Hirose", desc:"八丁堀の専門店", url:"#"}],
+        fukuoka: [{name:"Yoshizuka Unagi", desc:"吉塚うなぎ", url:"#"}]
+      },
+      tonkatsu: {
+        tokyo: [{name:"Maisen Aoyama", desc:"青山の老舗", url:"https://mai-sen.com/"},{name:"Tonkatsu Narikura", desc:"予約必須の新鋭", url:"#"}],
+        osaka: [{name:"Tonkatsu Katsuya", desc:"関西チェーン", url:"#"}],
+        kyoto: [{name:"Katsukura", desc:"京都の人気店", url:"https://www.katsukura.jp/"}],
+        hiroshima: [{name:"Tonkatsu Wako", desc:"広島の定番", url:"#"}],
+        fukuoka: [{name:"Hakata Tonkatsu Ozeki", desc:"博多のソウルフード", url:"#"}]
+      },
+      izakaya: {
+        tokyo: [{name:"Torikizoku", desc:"280円均一", url:"https://www.torikizoku.co.jp/"},{name:"Uoshin Noren", desc:"魚介が自慢", url:"#"}],
+        osaka: [{name:"Hanabishi", desc:"昭和レトロ", url:"#"}],
+        kyoto: [{name:"Izakaya Roku", desc:"創作料理", url:"#"}],
+        hiroshima: [{name:"Enotaro", desc:"地酒と瀬戸内の魚", url:"#"}],
+        fukuoka: [{name:"Nakasu Yatai", desc:"屋台体験", url:"#"}]
+      },
+      gyudon: {
+        tokyo: [{name:"Yoshinoya", desc:"牛丼の代名詞", url:"https://www.yoshinoya.com/"},{name:"Sukiya", desc:"日本一の店舗数", url:"https://www.sukiya.co.jp/"}],
+        osaka: [{name:"Matsuya", desc:"牛めしの名門", url:"https://www.matsuyafoods.co.jp/"}],
+        kyoto: [{name:"Yoshinoya Kyoto", desc:"京都の三条", url:"#"}],
+        hiroshima: [{name:"Sukiya Hiroshima", desc:"広島市内多数", url:"#"}],
+        fukuoka: [{name:"Matsuya Fukuoka", desc:"天神の24時間店", url:"#"}]
+      },
+      kaitenzushi: {
+        tokyo: [{name:"Sushiro", desc:"No.1回転寿司", url:"https://www.akindo-sushiro.co.jp/"},{name:"Kappa Sushi", desc:"タッチパネル注文", url:"https://www.kappasushi.jp/"}],
+        osaka: [{name:"Hamazushi", desc:"関西発祥", url:"https://www.hamazushi.com/"}],
+        kyoto: [{name:"Kura Sushi", desc:"100円寿司の革命", url:"https://www.kura-corpo.co.jp/"}],
+        hiroshima: [{name:"Sushiro Hiroshima", desc:"広島最大級", url:"#"}],
+        fukuoka: [{name:"Kaiten Sushi Ten", desc:"地元チェーン", url:"#"}]
+      }
+    };
+
+    // 各言語の料理名マップ（全16種）
     const foodNames = {
       en: { sushi:'Sushi', ramen:'Ramen', tempura:'Tempura', wagyu:'Wagyu', okonomiyaki:'Okonomiyaki', yakitori:'Yakitori', takoyaki:'Takoyaki', udon:'Udon', soba:'Soba', curry:'Curry Rice', gyoza:'Gyoza', unagi:'Unagi', tonkatsu:'Tonkatsu', izakaya:'Izakaya', gyudon:'Gyudon', kaitenzushi:'Kaitenzushi' },
       de: { sushi:'Sushi', ramen:'Ramen', tempura:'Tempura', wagyu:'Wagyu', okonomiyaki:'Okonomiyaki', yakitori:'Yakitori', takoyaki:'Takoyaki', udon:'Udon', soba:'Soba', curry:'Curryreis', gyoza:'Gyoza', unagi:'Unagi', tonkatsu:'Tonkatsu', izakaya:'Izakaya', gyudon:'Gyudon', kaitenzushi:'Kaitenzushi' },
@@ -488,30 +734,11 @@
       ja: { sushi:'寿司', ramen:'ラーメン', tempura:'天ぷら', wagyu:'和牛', okonomiyaki:'お好み焼き', yakitori:'焼き鳥', takoyaki:'たこ焼き', udon:'うどん', soba:'そば', curry:'カレーライス', gyoza:'餃子', unagi:'うなぎ', tonkatsu:'とんかつ', izakaya:'居酒屋', gyudon:'牛丼', kaitenzushi:'回転寿司' }
     };
 
-    // 店舗データ (新規4種含む)
-    const shopsData = {
-      sushi: { tokyo:[{name:"Sushi Saito", url:"https://sushi-saito.com/"},{name:"Sukiyabashi Jiro", url:"https://www.sushi-jiro.jp/"}], osaka:[{name:"Sushi Nakagawa", url:"#"}], kyoto:[{name:"Sushi Matsumoto", url:"#"}], hiroshima:[{name:"Tenzushi Kyobashi", url:"#"}], fukuoka:[{name:"Tenzushi Tenjin", url:"#"}] },
-      ramen: { tokyo:[{name:"Homemade Ramen Muginae", url:"#"}], osaka:[{name:"Kadoya Shokudo", url:"#"}], kyoto:[{name:"Honke Daiichi Asahi", url:"#"}], hiroshima:[{name:"Bakudan-ya", url:"#"}], fukuoka:[{name:"Hakata Issou", url:"#"}] },
-      tempura: { tokyo:[{name:"Tempura Kondo", url:"https://www.tempura-kondo.com/"},{name:"Tempura Fukamachi", url:"#"}], osaka:[{name:"Tempura Makino", url:"#"}], kyoto:[{name:"Tempura Endo Yasaka", url:"#"}], hiroshima:[{name:"Tempura Takase", url:"#"}], fukuoka:[{name:"Tempura Hirao", url:"#"}] },
-      wagyu: { tokyo:[{name:"USHIGORO S.", url:"https://ushigoro-s.com/"},{name:"Imahan Ningyocho", url:"https://www.imahan.com/"}], osaka:[{name:"Harariju", url:"#"}], kyoto:[{name:"Mishima-tei", url:"https://www.mishima-tei.co.jp/"}], hiroshima:[{name:"Wagyukan Mizutani", url:"#"}], fukuoka:[{name:"Yakiniku Nakasu Nagao", url:"#"}] },
-      okonomiyaki: { tokyo:[{name:"Hiroshima-yaki Musashi", url:"#"}], osaka:[{name:"Kiji", url:"#"}], kyoto:[{name:"Okonomiyaki Teppan", url:"#"}], hiroshima:[{name:"Denkosekka", url:"#"}], fukuoka:[{name:"Teppan-yaki Sumi", url:"#"}] },
-      yakitori: { tokyo:[{name:"Torishiki", url:"#"},{name:"Birdland Ginza", url:"#"}], osaka:[{name:"Yakitori Isono", url:"#"}], kyoto:[{name:"Kashiwaya", url:"#"}], hiroshima:[{name:"Herahera", url:"#"}], fukuoka:[{name:"Yakitori Kawanaka", url:"#"}] },
-      takoyaki: { tokyo:[{name:"Ginza Corridor", url:"#"}], osaka:[{name:"Takoyaki Dotonbori Kukuru", url:"https://kukuru.jp/"},{name:"Takoyaki Wanaka", url:"#"}], kyoto:[{name:"Takoyaki Kobo", url:"#"}], hiroshima:[{name:"Takoyaki Takopei", url:"#"}], fukuoka:[{name:"Honke Takoyaki", url:"#"}] },
-      udon: { tokyo:[{name:"Togawa", url:"#"}], osaka:[{name:"Kamadake Udon", url:"#"}], kyoto:[{name:"Yamamoto Menzo", url:"#"}], hiroshima:[{name:"Sanuki Udon Hayashi", url:"#"}], fukuoka:[{name:"Udon Taira", url:"#"}] },
-      soba: { tokyo:[{name:"Namiki Yabusoba", url:"#"}], osaka:[{name:"Honke Sarashina", url:"#"}], kyoto:[{name:"Honke Owariya", url:"https://www.honke-owariya.co.jp/"}], hiroshima:[{name:"Soba Dokoro Ippuku", url:"#"}], fukuoka:[{name:"Soba Uchida", url:"#"}] },
-      curry: { tokyo:[{name:"Ethiopia", url:"#"}], osaka:[{name:"Indian Curry", url:"#"}], kyoto:[{name:"Spice Curry Rhythm", url:"#"}], hiroshima:[{name:"Curry Puran", url:"#"}], fukuoka:[{name:"Curry Toki", url:"#"}] },
-      gyoza: { tokyo:[{name:"Gyoza Yoshimura", url:"#"}], osaka:[{name:"Osaka Ohsho Dotonbori", url:"#"}], kyoto:[{name:"Gyoza Nonki", url:"#"}], hiroshima:[{name:"Gyoza Mitsuba", url:"#"}], fukuoka:[{name:"Hakata Hitokuchi Gyoza", url:"#"}] },
-      unagi: { tokyo:[{name:"Nodaiwa", url:"https://nodaiwa.co.jp/"}], osaka:[{name:"Yoshitora", url:"#"}], kyoto:[{name:"Hirokawa", url:"https://unagi-hirokawa.com/"}], hiroshima:[{name:"Unagi Hirose", url:"#"}], fukuoka:[{name:"Yoshizuka Unagi", url:"#"}] },
-      // 新規
-      tonkatsu: { tokyo:[{name:"Maisen Aoyama", url:"https://mai-sen.com/"},{name:"Tonkatsu Narikura", url:"#"}], osaka:[{name:"Tonkatsu Katsuya", url:"#"}], kyoto:[{name:"Katsukura", url:"https://www.katsukura.jp/"}], hiroshima:[{name:"Tonkatsu Wako", url:"#"}], fukuoka:[{name:"Hakata Tonkatsu Ozeki", url:"#"}] },
-      izakaya: { tokyo:[{name:"Torikizoku", url:"https://www.torikizoku.co.jp/"},{name:"Uoshin Noren", url:"#"}], osaka:[{name:"Hanabishi", url:"#"}], kyoto:[{name:"Izakaya Roku", url:"#"}], hiroshima:[{name:"Enotaro", url:"#"}], fukuoka:[{name:"Nakasu Yatai", url:"#"}] },
-      gyudon: { tokyo:[{name:"Yoshinoya", url:"https://www.yoshinoya.com/"},{name:"Sukiya", url:"https://www.sukiya.co.jp/"}], osaka:[{name:"Matsuya", url:"https://www.matsuyafoods.co.jp/"}], kyoto:[{name:"Yoshinoya Kyoto", url:"#"}], hiroshima:[{name:"Sukiya Hiroshima", url:"#"}], fukuoka:[{name:"Matsuya Fukuoka", url:"#"}] },
-      kaitenzushi: { tokyo:[{name:"Sushiro", url:"https://www.akindo-sushiro.co.jp/"},{name:"Kappa Sushi", url:"https://www.kappasushi.jp/"}], osaka:[{name:"Hamazushi", url:"https://www.hamazushi.com/"}], kyoto:[{name:"Kura Sushi", url:"https://www.kura-corpo.co.jp/"}], hiroshima:[{name:"Sushiro Hiroshima", url:"#"}], fukuoka:[{name:"Kaiten Sushi Ten", url:"#"}] }
-    };
-
+    // ======================== レンダリング関数 ========================
     function updateUILanguage() {
       document.getElementById('app-title').innerText = translations[currentLang].title;
-      document.getElementById('footer-text').innerHTML = translations[currentLang].footer.replace(/\n/g,'<br>');
+      const footerText = document.getElementById('footer-text');
+      footerText.innerHTML = `${translations[currentLang].footer}<br><a href="mailto:mementomorikatsu@gmail.com">mementomorikatsu@gmail.com</a>`;
       document.getElementById('theme-toggle').innerText = translations[currentLang].themeBtn;
       renderHomeGrid();
       if (!document.getElementById('home-view').classList.contains('hidden')) return;
@@ -528,8 +755,9 @@
         card.setAttribute('data-id', food.id);
         const displayName = foodNames[currentLang][food.id] || food.id;
         const descText = descriptions[currentLang][food.keyDesc] || '';
+        const imgHtml = food.imageUrl ? `<img class="food-image" src="${food.imageUrl}" alt="${displayName}" loading="lazy">` : `<div class="food-emoji">${food.emoji}</div>`;
         card.innerHTML = `
-          <div class="food-emoji">${food.emoji}</div>
+          ${imgHtml}
           <div class="food-name">${displayName}</div>
           <div class="food-desc">${descText.substring(0, 70)}</div>
         `;
@@ -542,28 +770,31 @@
       const food = foodData.find(f => f.id === foodId);
       if (!food) return;
       const foodName = foodNames[currentLang][food.id];
-      const longDesc = descriptions[currentLang][food.keyDesc];
-      const shops = shopsData[food.id];
-      const cities = ['tokyo','osaka','kyoto','hiroshima','fukuoka'];
+      const longDesc = descriptions[currentLang][food.keyDesc] || '';
+      const tips = descriptions[currentLang][food.tips] || '';
+      const shops = shopsData[food.id] || {};
+      const cities = ['tokyo', 'osaka', 'kyoto', 'hiroshima', 'fukuoka'];
       let shopsHtml = '';
       for (let city of cities) {
-        const cityList = shops[city] || [];
-        if (cityList.length) {
+        const cityList = shops[city];
+        if (cityList && cityList.length > 0) {
           shopsHtml += `<div class="city-shops"><div class="city-name">${translations[currentLang].cities[city]}</div><ul class="shop-list">`;
           cityList.forEach(shop => {
-            shopsHtml += `<li><span class="shop-name">${shop.name}</span> <a href="${shop.url}" target="_blank" rel="noopener" class="shop-link">${currentLang === 'ja' ? '公式サイト' : 'Official Site'}</a></li>`;
+            shopsHtml += `<li><div class="shop-info"><span class="shop-name">${shop.name}</span><span class="shop-desc">${shop.desc || ''}</span></div><a href="${shop.url}" target="_blank" rel="noopener" class="shop-link">${currentLang === 'ja' ? '公式サイト' : 'Official Site'}</a></li>`;
           });
           shopsHtml += `</ul></div>`;
         }
       }
+      const imgHtml = food.imageUrl ? `<img class="detail-image" src="${food.imageUrl}" alt="${foodName}">` : `<div class="detail-emoji" style="font-size:5rem">${food.emoji}</div>`;
       const detailHtml = `
         <div class="detail-header">
-          <div class="detail-emoji">${food.emoji}</div>
+          ${imgHtml}
           <div class="detail-title">${foodName}</div>
         </div>
         <div class="detail-description">${longDesc}</div>
+        ${tips ? `<div class="tips"><strong>${translations[currentLang].tipsLabel}</strong><br>${tips}</div>` : ''}
         <div class="section-title">🍽️ ${currentLang === 'ja' ? '有名店リスト' : 'Famous Restaurants'}</div>
-        ${shopsHtml}
+        ${shopsHtml || '<p>' + (currentLang === 'ja' ? '店舗情報は準備中です' : 'Restaurant information coming soon') + '</p>'}
         <div class="back-buttons">
           <button class="back-btn" id="back-to-home">${translations[currentLang].backHome}</button>
           <button class="back-btn" id="back-previous">${translations[currentLang].backPrev}</button>
@@ -588,9 +819,10 @@
 
     function initLangButtons() {
       const container = document.getElementById('lang-buttons');
-      for (const [code, label] of Object.entries(languages)) {
+      for (const [code, data] of Object.entries(languages)) {
         const btn = document.createElement('button');
-        btn.innerText = label;
+        btn.className = 'lang-btn';
+        btn.innerHTML = `${data.flag} ${data.label}`;
         btn.addEventListener('click', () => {
           currentLang = code;
           updateUILanguage();
@@ -632,26 +864,25 @@
     }
 
     window.addEventListener('popstate', () => {
-      if (document.getElementById('detail-view') && !document.getElementById('detail-view').classList.contains('hidden')) {
-        if (!window.location.hash || window.location.hash === '#home') showHomeView();
-        else {
-          const id = window.location.hash.slice(1);
-          if (id && foodData.some(f=>f.id===id)) showDetailView(id);
-          else showHomeView();
-        }
+      if (!document.getElementById('home-view').classList.contains('hidden')) {
+        if (window.location.hash === '#home') return;
+        const id = window.location.hash.slice(1);
+        if (id && foodData.some(f=>f.id===id)) showDetailView(id);
+        else showHomeView();
       } else {
         if (window.location.hash === '#home') showHomeView();
         else route();
       }
     });
 
-    // PWA Service Worker
+    // PWA Service Worker 登録
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registered', reg)).catch(err => console.log('SW error', err));
+        navigator.serviceWorker.register('.sw.js').then(reg => console.log('SW registered', reg)).catch(err => console.log('SW error', err));
       });
     }
 
+    // 初期化
     initLangButtons();
     initTheme();
     renderHomeGrid();
